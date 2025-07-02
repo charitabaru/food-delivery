@@ -1,5 +1,5 @@
 .cart {
-    margin-top: 100px;
+    margin-top: 60px;
     padding: 20px;
     max-width: 1200px;
     margin-left: auto;
@@ -50,17 +50,23 @@
 }
 
 .cart-items-item .cross {
+    background: none;
+    border: none;
+    outline: none;
     cursor: pointer;
-    color: #ff4444;
-    font-size: 18px; /* Reduced from 20px */
+    color: tomato;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
     transition: color 0.2s ease;
+    padding: 0;
 }
 
+
 .cart-items-item .cross:hover {
-    color: #cc0000;
+    color: #cc3a2f;
 }
+
 
 .cart-bottom {
     margin-top: 80px;
@@ -207,6 +213,117 @@
 .cart-empty button:hover {
     background-color: #e5533d;
 }
+
+/* Additional styles for quantity controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.quantity-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.quantity-input {
+    width: 50px;
+    padding: 6px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+/* Clear cart button in header */
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.clear-cart-btn {
+    border: none;
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.clear-cart-btn:hover {
+    background-color: #d32f2f;
+}
+
+.clear-cart-btn.confirm {
+    background-color: #ffa726;
+}
+
+/* Loading message */
+.loading-message {
+    text-align: center;
+    color: #555;
+    padding: 60px 0;
+    font-size: 18px;
+}
+
+/* Browse button for empty cart */
+.browse-button {
+    background-color: #007bff;
+    border: none;
+    padding: 12px 25px;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.browse-button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: Empty cart icon */
+.empty-cart-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.shop-more-btn {
+    background-color: tomato;
+    border: none;
+    padding: 12px 25px;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.shop-more-btn:hover {
+    background-color: rgb(246, 112, 89);
+}
+
 
 @media (max-width: 750px) {
     .cart-bottom {

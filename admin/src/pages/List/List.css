@@ -1,0 +1,215 @@
+/* List Component Styles */
+.list {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px 20px 20px 30px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.list-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.list-stats {
+  display: flex;
+  align-items: center;
+}
+
+.total-items {
+  background: #fff0ed;
+  color: #ff6347;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #ffccc7;
+}
+
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.list-table-format {
+  display: grid;
+  grid-template-columns: 60px 80px 1fr 1fr 100px 80px;
+  gap: 15px;
+  padding: 15px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.list-table-format:hover {
+  background-color: #f9f9f9;
+}
+
+.list-table-format.title {
+  background: #fff0ed;
+  font-weight: 300;
+  color: #333;
+  border-bottom: 2px solid #ffccc7;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-radius: 6px 6px 0 0;
+}
+
+.serial-number {
+  text-align: center;
+  font-weight: 500;
+  color: #666;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.list-table-format img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.list-table-format p {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.list-table-format .cursor {
+  cursor: pointer;
+  color: #ff6347;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
+  border: 1px solid #ff6347;
+  background: transparent;
+}
+
+.list-table-format .cursor:hover {
+  background-color: #ff6347;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .list {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .list-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .list-table-format {
+    grid-template-columns: 40px 60px 1fr 80px 60px 50px;
+    gap: 10px;
+    padding: 10px 5px;
+    font-size: 12px;
+  }
+  
+  .list-table-format img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .list-title {
+    font-size: 18px;
+  }
+  
+  .serial-number {
+    padding: 4px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .list-table-format {
+    grid-template-columns: 35px 50px 1fr 60px 40px;
+    gap: 8px;
+  }
+  
+  .list-table-format p:nth-child(4) {
+    display: none; /* Hide category on very small screens */
+  }
+  
+  .list-table-format.title p:nth-child(4) {
+    display: none; /* Hide category header on very small screens */
+  }
+}
+
+/* Loading state */
+.list-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Empty state */
+.list-empty {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+.list-empty p {
+  margin-bottom: 10px;
+}
+
+/* Utility classes */
+.add {
+  /* This class might be used by parent components for additional styling */
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Enhanced hover effects */
+.list-table-format:not(.title):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Price styling */
+.list-table-format p:nth-child(5) {
+  font-weight: 400;
+  color: #333;
+}
+
+/* Action button improvements */
+.list-table-format .cursor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 30px;
+  border-radius: 4px;
+  margin: 0 auto;
+  font-size: 12px;
+  font-weight: 500;
+}

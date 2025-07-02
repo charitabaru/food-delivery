@@ -1,0 +1,108 @@
+.admin-orders {
+    padding: 40px;
+    background: #fafafa;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-orders h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.loading-text,
+.error-text,
+.empty-text {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+}
+
+.order-box {
+    border: 1px solid #f1d5cd;
+    border-left: 6px solid #ff6347;
+    border-radius: 6px;
+    padding: 20px;
+    background: #fff;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+.order-box:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.order-box-left {
+    display: flex;
+    gap: 15px;
+    flex: 1;
+}
+
+.order-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.order-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.item-summary {
+    font-size: 15px;
+    color: #222;
+    margin: 0;
+}
+
+.address p {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.order-box-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.order-box-right p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin: 0;
+}
+
+.order-box-right select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff0ec;
+    color: #333;
+    cursor: pointer;
+}
+
+.order-box-right select:focus {
+    outline: none;
+    border-color: #ff6347;
+}
+
+@media (max-width: 768px) {
+    .order-box {
+        flex-direction: column;
+    }
+
+    .order-box-right {
+        align-items: flex-start;
+    }
+}
