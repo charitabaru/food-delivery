@@ -21,6 +21,8 @@ const PlaceOrder = () => {
     phone: ''
   })
 
+  const [paymentMethod, setPaymentMethod] = useState('cod'); // Default to COD
+
   const onChangeHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -28,6 +30,10 @@ const PlaceOrder = () => {
       ...data,
       [name]: value
     }));
+  }
+
+  const handlePaymentMethodChange = (method) => {
+    setPaymentMethod(method);
   }
 
   const placeOrder = async (e) => {
@@ -59,21 +65,43 @@ const PlaceOrder = () => {
       address: data,
       items: orderItems,
       amount: getTotalCartAmount() + 25, // Including delivery fee
+      paymentMethod: paymentMethod
     }
 
     try {
-      let response = await axios.post(url + "/api/order/place", orderData, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      let response;
+      
+      if (paymentMethod === 'cod') {
+        // For COD, place order directly
+        response = await axios.post(url + "/api/order/place-cod", orderData, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      if (response.data.success) {
-        const { session_url } = response.data;
-        window.location.replace(session_url);
-      } else {
-        alert("Error placing order");
+        if (response.data.success) {
+          // Clear cart and redirect to my orders page
+          alert("Order placed successfully!");
+          navigate('/myorders'); // Changed from '/orders' to '/myorders'
+        } else {
+          alert("Error placing order: " + response.data.message);
+        }
+      } else if (paymentMethod === 'stripe') {
+        // For Stripe, get payment session URL
+        response = await axios.post(url + "/api/order/place-stripe", orderData, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.data.success) {
+          const { session_url } = response.data;
+          window.location.replace(session_url);
+        } else {
+          alert("Error creating payment session: " + response.data.message);
+        }
       }
     } catch (error) {
       console.log("Error:", error);
@@ -192,7 +220,45 @@ const PlaceOrder = () => {
               <b>₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 25}</b>
             </div>
           </div>
-          <button type="submit">PROCEED TO PAYMENT</button>
+          
+          {/* Payment Method Selection */}
+          <div className="payment-method">
+            <h3>Payment Method</h3>
+            <div className="payment-options">
+              <div 
+                className={`payment-option ${paymentMethod === 'cod' ? 'selected' : ''}`}
+                onClick={() => handlePaymentMethodChange('cod')}
+              >
+                <input 
+                  type="radio" 
+                  id="cod" 
+                  name="paymentMethod" 
+                  value="cod"
+                  checked={paymentMethod === 'cod'}
+                  onChange={() => handlePaymentMethodChange('cod')}
+                />
+                <label htmlFor="cod">COD (Cash on Delivery)</label>
+              </div>
+              <div 
+                className={`payment-option ${paymentMethod === 'stripe' ? 'selected' : ''}`}
+                onClick={() => handlePaymentMethodChange('stripe')}
+              >
+                <input 
+                  type="radio" 
+                  id="stripe" 
+                  name="paymentMethod" 
+                  value="stripe"
+                  checked={paymentMethod === 'stripe'}
+                  onChange={() => handlePaymentMethodChange('stripe')}
+                />
+                <label htmlFor="stripe">Stripe (Credit/Debit Card)</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit">
+            {paymentMethod === 'cod' ? 'PLACE ORDER' : 'PROCEED TO PAYMENT'}
+          </button>
         </div>
       </div>
     </form>

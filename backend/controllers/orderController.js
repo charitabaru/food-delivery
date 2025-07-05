@@ -6,7 +6,8 @@ dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-const placeOrder = async (req, res) => {
+// Place order with COD
+const placeOrderCOD = async (req, res) => {
     try {
         // Get userId from the authenticated user (set by auth middleware)
         const userId = req.user.id;
@@ -15,12 +16,44 @@ const placeOrder = async (req, res) => {
             userId: userId,
             items: req.body.items,
             amount: req.body.amount,
-            address: req.body.address
+            address: req.body.address,
+            paymentMethod: "cod",
+            payment: false, // Will be true when payment is received on delivery
+            status: "Order Placed"
         })
         await newOrder.save();
 
         // Clear user's cart after placing order
         await userModel.findByIdAndUpdate(userId, { cartData: {} });
+
+        res.json({ 
+            success: true, 
+            message: "Order placed successfully with COD",
+            orderId: newOrder._id
+        });
+
+    } catch (error) {
+        console.error("Error placing COD order:", error);
+        res.json({ success: false, message: "Error placing order" });
+    }
+};
+
+// Place order with Stripe
+const placeOrderStripe = async (req, res) => {
+    try {
+        // Get userId from the authenticated user (set by auth middleware)
+        const userId = req.user.id;
+        
+        const newOrder = new orderModel({
+            userId: userId,
+            items: req.body.items,
+            amount: req.body.amount,
+            address: req.body.address,
+            paymentMethod: "stripe",
+            payment: false, // Will be true after successful payment
+            status: "Payment Pending"
+        })
+        await newOrder.save();
 
         // Create line items for Stripe
         // Since prices are already in INR, just multiply by 100 to convert to paise
@@ -52,12 +85,33 @@ const placeOrder = async (req, res) => {
             mode: "payment",
             success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${newOrder._id}`,
             cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${newOrder._id}`,
+            metadata: {
+                orderId: newOrder._id.toString()
+            }
         })
 
         res.json({ success: true, session_url: session.url })
 
     } catch (error) {
-        console.error("Error placing order:", error);
+        console.error("Error placing Stripe order:", error);
+        res.json({ success: false, message: "Error creating payment session" });
+    }
+};
+
+// Legacy placeOrder function (for backward compatibility)
+const placeOrder = async (req, res) => {
+    try {
+        const paymentMethod = req.body.paymentMethod || "stripe"; // Default to stripe for backward compatibility
+        
+        if (paymentMethod === "cod") {
+            return placeOrderCOD(req, res);
+        } else if (paymentMethod === "stripe") {
+            return placeOrderStripe(req, res);
+        } else {
+            return res.json({ success: false, message: "Invalid payment method" });
+        }
+    } catch (error) {
+        console.error("Error in placeOrder:", error);
         res.json({ success: false, message: "Internal server error" });
     }
 };
@@ -67,7 +121,10 @@ const verifyOrder = async (req, res) => {
     const { orderId, success } = req.body;
     try {
         if (success === "true") {
-            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            await orderModel.findByIdAndUpdate(orderId, { 
+                payment: true,
+                status: "Order Confirmed"
+            });
             res.json({ success: true, message: "Payment verified successfully" });
         } else {
             // Delete the order if payment failed
@@ -84,17 +141,17 @@ const verifyOrder = async (req, res) => {
 const getUserOrders = async (req, res) => {
     try {
         const userId = req.user.id;
-        const orders = await orderModel.find({ userId: userId });
+        const orders = await orderModel.find({ userId: userId }).sort({ createdAt: -1 });
         res.json({ success: true, data: orders });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: "Error fetching orders" });
     }
 };
 
 const listOrders = async (req, res) => {
     try{
-        const orders = await orderModel.find({});
+        const orders = await orderModel.find({}).sort({ createdAt: -1 });
         res.json({success: true, data: orders})
     }catch(error){
         console.log(error);
@@ -120,23 +177,31 @@ const getOrderById = async (req, res) => {
         res.json({ success: true, data: order });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: "Error fetching order" });
     }
 };
 
 // Update order status (admin or system use)
 const updateOrderStatus = async (req, res) => {
     try {
-        await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status });
+        const { orderId, status } = req.body;
+        
+        if (!orderId || !status) {
+            return res.json({ success: false, message: "Order ID and status are required" });
+        }
+
+        await orderModel.findByIdAndUpdate(orderId, { status: status });
         res.json({ success: true, message: "Status Updated" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: "Error updating status" });
     }
 };
 
 export {
     placeOrder,
+    placeOrderCOD,
+    placeOrderStripe,
     getUserOrders,
     getOrderById,
     verifyOrder,

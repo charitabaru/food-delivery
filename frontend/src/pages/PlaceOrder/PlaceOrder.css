@@ -33,3 +33,58 @@
 .place-order .cart-total button{
     margin-top: 30px;
 }
+
+/* Payment Method Styling */
+.payment-method {
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.payment-method h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.payment-option:hover {
+    border-color: #ff6347;
+    background-color: #fef8f8;
+}
+
+.payment-option.selected {
+    border-color: #ff6347;
+    background-color: #fff5f5;
+}
+
+.payment-option input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #ff6347;
+}
+
+.payment-option label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    flex: 1;
+}
