@@ -12,7 +12,7 @@ const StoreContextProvider = (props) => {
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(false);
   
-  const url = "http://localhost:4000";
+  const url = "https://food-delivery-396q.onrender.com";
 
   // Authentication Functions
   const login = async (email, password) => {
